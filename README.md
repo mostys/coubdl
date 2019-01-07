@@ -7,7 +7,7 @@ These instructions will get you a copy of the project up and running on your loc
 - ffmpeg
 #### Python Libs
 - requests
-- beautifoulsoup4
+- beautifulsoup4
 - clint
 ## Installing
 OS X & Linux:
