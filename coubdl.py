@@ -2,15 +2,19 @@ import requests
 import json
 from bs4 import BeautifulSoup
 import subprocess
+import os
 from clint.textui import progress
 
 
 class CoubDownloader:
     def __init__(self, url):
-        # TODO: Regex to check the url and change embed to view
-        self.url = url
-        self.videoname = self.url[22:]+"_video"
-        self.audioname = self.url[22:]+"_audio.mp3"
+        if "embed" in url:
+            self.url = url.replace("embed", "view")
+        else:
+            self.url = url
+        self.coubid = self.url[22:]
+        self.videoname = self.coubid+"_video"
+        self.audioname = self.coubid+"_audio.mp3"
 
     def datadl(self, url, filetype):
         filename = self.audioname if filetype == "audio" else self.videoname
@@ -53,23 +57,24 @@ class CoubDownloader:
             except Exception as e:
                 print(e)
         else:
-            print("Erreur type flux")
+            print("Error type not found in json (no high/med quality)")
             exit(1)
         return filename
 
     def merge(self):
-        cmd = 'ffmpeg -i {0} -i {1} -filter_complex " [1:0] apad " -shortest output.mp4'.format(
-            self.videoname, self.audioname)
-        subprocess.call(cmd, shell=True)
-        print('Muxing Done')
+        cmd = 'ffmpeg -i {0} -i {1} -filter_complex " [1:0] apad " -shortest {2}.mp4'.format(
+            self.videoname, self.audioname, self.coubid)
+        subprocess.call(cmd, shell=False)
+        os.remove(self.videoname.replace(".mp4", ""))
+        os.remove(self.videoname)
+        os.remove(self.audioname)
+        print('Muxing Done with ffmpeg')
 
     def dl(self):
         r = requests.get(self.url)
-        # print(r.status_code)
         html = BeautifulSoup(r.text, features="html.parser")
+        assert r.status_code == 200
         cbdata = html.find(id="coubPageCoubJson").get_text()
-        text = open("test.json", "w")
-        print(cbdata, file=text)
         cbdata = json.loads(cbdata)
         html5 = cbdata["file_versions"]["html5"]
         video = html5["video"]
@@ -77,4 +82,3 @@ class CoubDownloader:
         self.retrieve_data(video, "video")
         self.retrieve_data(audio, "audio")
         self.fixencoding()
-        print("STOP")
