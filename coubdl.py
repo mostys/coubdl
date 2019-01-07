@@ -1,7 +1,6 @@
 import requests
 import json
 from bs4 import BeautifulSoup
-from tqdm import tqdm
 import subprocess
 from clint.textui import progress
 
