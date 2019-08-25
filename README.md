@@ -10,11 +10,25 @@ These instructions will get you a copy of the project up and running on your loc
 - beautifulsoup4
 - clint
 ## Installing
-OS X & Linux:
-```
+Linux (Ubuntu 18.04.2 LTS Bionic):
+```bash
+sudo apt update && sudo apt install -y ffmpeg
+# If you already have python3 skip this part
+sudo apt install -y python3 python3-pip
+# Run the following commands inside the coubdl directory
+pip3 install -r requirements.txt
+# Run the program
+python3 main.py https://coub.com/view/1vpqwl 3
 ```
 Windows :
+For installing ffmpeg refer to :
+https://github.com/adaptlearning/adapt_authoring/wiki/Installing-FFmpeg#installing-ffmpeg-in-windows
+For installing python 3 refer to:
+https://www.python.org/downloads/
+Then inside cmd and inside the coubdl directory
 ```
+pip install -r requirements.txt
+python main.py https://coub.com/view/1vpqwl 3
 ```
 
 ## Contributing
