@@ -65,23 +65,12 @@ class CoubDownloader:
         return filename
 
     def merge(self):
-        if self.loop < 2:
-            cmd = "ffmpeg -i '{}' -i '{}' -shortest '{}.mp4' -y".format(
-                self.videoname, self.audioname, self.coubid
-            )
-        elif self.loop > 2:
-            with open("tempvid.txt", "w") as f:
-                path = os.path.abspath(self.videoname)
-                for i in range(1, self.loop + 1):
-                    # path = (
-                    #     self.videoname.replace(".mp4", "") + "_" + str(i + 1) + ".mp4"
-                    # )
-                    f.write("file {} \n".format(path))
-                    # copyfile(self.videoname, path)
-                    print(path)
-            cmd = "ffmpeg -f concat -safe 0 -i tempvid.txt -i {} -shortest {}.mp4 -y".format(
-                self.audioname, self.coubid
-            )
+        with open("tempvid.txt", "w", encoding="utf8") as f:
+            for i in range(1, self.loop + 1):
+                f.write("file "+self.videoname+" \n")
+        cmd = "ffmpeg -f concat -safe 0 -i tempvid.txt -i {} -shortest {}.mp4 -y".format(
+            self.audioname, self.coubid
+        )
         subprocess.call(cmd, shell=True)
         os.remove(self.videoname.replace(".mp4", ""))
         os.remove(self.videoname)

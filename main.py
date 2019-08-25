@@ -13,9 +13,10 @@ if url is not None:
     if loop is not None and str(loop) != "" and len(loop) > 0 and len(args) > 1:
         dw = cb.CoubDownloader(url, loop)
     else:
-        dw = cb.CoubDownloader(url, "0")
+        dw = cb.CoubDownloader(url, "1")
     dw.dl()
     dw.merge()
     print("Exiting")
 else:
-    print("Usage : main.py <url> <loop>")
+    print("Usage : coubdl.exe <url> <loop>")
+    print("Example : coubdl.exe https://coub.com/view/1vpqwl 3")
